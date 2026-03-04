@@ -1,59 +1,115 @@
-window.addEventListener("load", init);
+/* Ez a kezdeti állapot */
+const KECSKE = "kecske2.png";
+const FARKAS = "farkas.png";
+const KAPOSZTA = "kaposzta.png";
 
-function init() {
-  console.log("hahó");
-  var pElem = document.querySelectorAll("footer p")[0]; //html elem
-  pElem.innerHTML = "Cs Katalin"; //elem tartalmának megvált.
-  //b.	A szöveget igazítsd középre,
-  pElem.style.textAlign = "center";
-  //a betűméretet állítsd be 20px-re.
-  pElem.style.fontSize = "20px";
+const balLista = [KECSKE, FARKAS, KAPOSZTA];
+const csonakLista = [];
+const jobbLista = [];
+const balPartElem = document.querySelector("#bal>p");
+const jobbPartElem = document.querySelector("#jobb>p");
+const csonakElem = document.querySelector("#csonak");
+let hajoElem = document.querySelector("#hajo");
+let irany = true; /* true->balról jobbra, false->jobbról balra */
 
-  /*A képekre kattintva (bármelyik képre kattintunk), */
-  var kepTomb = document.querySelectorAll("#bal>p>img");
-  console.log(kepTomb);
-  kepTomb.forEach(function (elem) {
-    elem.addEventListener("click", kattintas);
-    /**Ha a  képek fölé mozgatva az egeret a képen jelenjen meg  a kiemel stílus!
-6.	JS: Ha a képekről elviszem az egeret, akkor a stílus tűnjön el róla. 
- */
-    elem.addEventListener("mouseover", function (event) {
-      // event.target.className="kiemel";
+let balraGomb = document.getElementById("balra");
+let jobbraGomb = document.getElementById("jobbra");
+
+balraGomb.addEventListener("click", function () {
+  irany = false;
+  csonakElem.style.textAlign = "left";
+
+  ellenorzes(balLista);
+  ellenorzes(jobbLista);
+});
+jobbraGomb.addEventListener("click", function () {
+  irany = true;
+  csonakElem.style.textAlign = "right";
+
+  ellenorzes(balLista);
+  ellenorzes(jobbLista);
+});
+
+megjelenit();
+/* Megjelenítjük a program állapotát */
+function megjelenit() {
+  balPartElem.innerHTML = "";
+  jobbPartElem.innerHTML = "";
+  csonakElem.innerHTML = ` <span id="hajo">
+          <img src="kepek/csonak.png" alt="" class="csonakkep">
+          </span> `;
+  hajoElem = document.querySelector("#hajo");
+  for (let index = 0; index < balLista.length; index++) {
+    balPartElem.innerHTML += `<img class="kep" src="kepek/${balLista[index]}" id="b_${index}" alt="">`;
+  }
+
+  for (let index = 0; index < jobbLista.length; index++) {
+    jobbPartElem.innerHTML += `<img  class="kep" src="kepek/${jobbLista[index]}" id="j_${index}" alt="">`;
+  }
+
+  for (let index = 0; index < csonakLista.length; index++) {
+    console.log(hajoElem);
+    hajoElem.innerHTML += `<img class="kep" src="kepek/${csonakLista[index]}"  id="cs_${index}" alt="">`;
+  }
+
+  esemenyek();
+}
+function esemenyek() {
+  const kepElemek = document.querySelectorAll(".kep");
+  console.log(kepElemek);
+  for (let index = 0; index < kepElemek.length; index++) {
+    kepElemek[index].addEventListener("click", function (event) {
+      /* kiveszem és beleteszem a megfelelő tömbbe, de csak akkor, ha még van hely! */
+
+      const splitLista = event.target.id.split("_");
+      let hely = splitLista[0];
+      let azon = parseInt(splitLista[1]);
+      console.log(hely, azon);
+      switch (hely) {
+        case "b":
+          if (csonakLista.length < 1) {
+            csonakLista.push(balLista[azon]);
+            balLista.splice(azon, 1);
+          }
+
+          break;
+        case "cs":
+          if (irany) {
+            jobbLista.push(csonakLista[azon]);
+            csonakLista.splice(azon, 1);
+          } else {
+            balLista.push(csonakLista[azon]);
+            csonakLista.splice(azon, 1);
+          }
+
+          break;
+        case "j":
+          if (csonakLista.length < 2) {
+            csonakLista.push(jobbLista[azon]);
+            jobbLista.splice(azon, 1);
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      megjelenit();
+    });
+    kepElemek[index].addEventListener("mouseover", function (event) {
       event.target.classList.add("kiemel");
     });
-    elem.addEventListener("mouseout", function (event) {
-      //event.target.className="";
+    kepElemek[index].addEventListener("mouseout", function (event) {
       event.target.classList.remove("kiemel");
     });
-  });
+  }
 }
 
-var tomb = [];
-
-function kattintas() {
-  console.log(event.target.src); //ki váltotta ki az eseményt
-
-  tomb.push(event.target.src);
-  console.log(tomb);
-  /*a.	a kép elérési útját (src) mentsd el egy tömbbe (tomb.push(event.target.src))
-b.	írd ki a tömb tartalmát a konzolra!*/
-  //Amelyik elemre kattintottam, arról leveszem az eseménykezelőt
-  event.target.removeEventListener("click", kattintas);
-  //A képre kattintva a képet tüntessük el a bal oldalról (display:none;)
-  event.target.style.display = "none";
-  // és jelenítsük meg a csónak közepén.
-  //Ehhez helyezd el az article tagben található div tárolóba a képet!
-  var akktKep = "<img src='" + event.target.src + "' alt='' >";
-  document.querySelectorAll("#csonak")[0].innerHTML += akktKep;
-  var csonakTomb = document.querySelectorAll("#csonak img");
-  csonakTomb.forEach(function (elem) {
-    elem.addEventListener("mouseover", function (event) {
-      // event.target.className="kiemel";
-      event.target.classList.add("kiemel");
-    });
-    elem.addEventListener("mouseout", function (event) {
-      //event.target.className="";
-      event.target.classList.remove("kiemel");
-    });
-  });
+function ellenorzes(lista) {
+  let hiba1 = lista.includes(KECSKE) && lista.includes(KAPOSZTA);
+  let hiba2 = lista.includes(KECSKE) && lista.includes(FARKAS);
+  if (lista.length == 2 && (hiba1 || hiba2)) {
+    alert("Hiba! Itt valaki megevett valakit, vagy valamit!");
+     document.body.style.pointerEvents = "none";
+  }
 }

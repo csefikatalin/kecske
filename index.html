@@ -10,7 +10,7 @@ and open the template in the editor.
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="kecske.css" rel="stylesheet" type="text/css" />
-    <script src="kecske.js" type="text/javascript"></script>
+    <script src="kecske.js" type="module"></script>
   </head>
   <body>
     <main>
@@ -27,13 +27,17 @@ and open the template in the editor.
       <aside id="bal">
         <h2>Bal part</h2>
         <p>
-          <img src="kepek/kecske2.png" alt="kecske" />
-          <img src="kepek/kaposzta.png" alt="kaposzta" />
-          <img src="kepek/farkas.png" alt="farkas" />
+
         </p>
       </aside>
       <article>
-        <div id="csonak"></div>
+        <div id="balra">◀️</div>
+        <div id="csonak">
+         <span id="hajo">
+          <img src="kepek/csonak.png" alt="">
+          </span> 
+        </div>
+            <div id="jobbra">▶️</div>
       </article>
       <aside id="jobb">
         <h2>Jobb part</h2>
@@ -41,11 +45,7 @@ and open the template in the editor.
       </aside>
       <footer>
         <p>Készítő neve</p>
-        <form>
-          <label>Ennyit ér a dolgozatom</label>
-          <input type="number" id="jegy" min="0" max="15" />
-          <input type="button" value="OK" id="OK" />
-        </form>
+        
       </footer>
     </main>
   </body>
