@@ -40,16 +40,16 @@ function megjelenit() {
           </span> `;
   hajoElem = document.querySelector("#hajo");
   for (let index = 0; index < balLista.length; index++) {
-    balPartElem.innerHTML += `<img class="kep" src="kepek/${balLista[index]}" id="b_${index}" alt="">`;
+    balPartElem.innerHTML += `<img class="kep" src="kepek/${balLista[index]}"  data-hely="b"   data-index="${index}" alt="">`;
   }
 
   for (let index = 0; index < jobbLista.length; index++) {
-    jobbPartElem.innerHTML += `<img  class="kep" src="kepek/${jobbLista[index]}" id="j_${index}" alt="">`;
+    jobbPartElem.innerHTML += `<img  class="kep" src="kepek/${jobbLista[index]}" data-hely="j"   data-index="${index}" alt="">`;
   }
 
   for (let index = 0; index < csonakLista.length; index++) {
     console.log(hajoElem);
-    hajoElem.innerHTML += `<img class="kep" src="kepek/${csonakLista[index]}"  id="cs_${index}" alt="">`;
+    hajoElem.innerHTML += `<img class="kep" src="kepek/${csonakLista[index]}"  data-hely="cs"   data-index="${index}" alt="">`;
   }
 
   esemenyek();
@@ -61,9 +61,8 @@ function esemenyek() {
     kepElemek[index].addEventListener("click", function (event) {
       /* kiveszem és beleteszem a megfelelő tömbbe, de csak akkor, ha még van hely! */
 
-      const splitLista = event.target.id.split("_");
-      let hely = splitLista[0];
-      let azon = parseInt(splitLista[1]);
+      let hely = event.target.dataset.hely;
+      let azon = parseInt(event.target.dataset.index);
       console.log(hely, azon);
       switch (hely) {
         case "b":
@@ -110,6 +109,6 @@ function ellenorzes(lista) {
   let hiba2 = lista.includes(KECSKE) && lista.includes(FARKAS);
   if (lista.length == 2 && (hiba1 || hiba2)) {
     alert("Hiba! Itt valaki megevett valakit, vagy valamit!");
-     document.body.style.pointerEvents = "none";
+    document.body.style.pointerEvents = "none";
   }
 }
